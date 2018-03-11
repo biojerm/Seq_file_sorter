@@ -62,6 +62,36 @@ def sort_files():
 		# I think this will mostly happen if the script runs twice.
 		pass
 
+def choose_regex(file_name):
+	"""Returns RegEx pattern matching file_name"""
+
+	# ([A-Z]+_[0-9]+-[0-9]+_)(.*)(_[A-H]{1}[0-9]{2}(.ab1|seq))
+	# |-group1------|--group2---------|-g3|-g4
+	#									   |g5
+	# JL_470815-501_US_NDT80_pUC-Seq-F_A12.ab1
+	if re.search('([A-Z]+_[0-9]+-[0-9]+_)(.*)([-|_][A-Z]+[0-9]+)(.(ab1|seq))',file_name):
+		re_pattern =['([A-Z]+_[0-9]+-[0-9]+_)(.*)([-|_][A-Z]+[0-9]+)(.(ab1|seq))',(2,4,5)]
+
+	# (.*)(_\d{4}-\d{2}-\d{2}_[a-hA-H]\d*)(.(ab1|seq))
+	# |-g1---|--g2----------|g3-
+	#						 |g4
+	# H1_JL62_2017-01-20_E06.ab1
+	elif re.search('(.*)(_\d{4}-\d{2}-\d{2}_[a-hA-H]\d*)(.(ab1|seq))',file_name):
+		re_pattern = ['(.*)(_\d{4}-\d{2}-\d{2}_[a-hA-H]\d*)(.(ab1|seq))',(1,3,4)]
+
+	# ([A-Z]+_[0-9]+-[0-9]+_)(.*[_|-][a-zA-Z]+[0-9]+)([a-hA-H]\d*)(.(ab1|seq))
+	# |----g1------|-----g2--|g3|4|g5|  # g4 is the period g5 is ab1 or seq
+	# JL_535622-623_7-1_oJL330C04.seq
+	elif re.search('([A-Z]+_[0-9]+-[0-9]+_)(.*[_|-][a-zA-Z]+[0-9]+)([a-hA-H]\d*)(.(ab1|seq))',file_name):
+		re_pattern =['([A-Z]+_[0-9]+-[0-9]+_)(.*[_|-][a-zA-Z]+[0-9]+)([a-hA-H]\d*)(.(ab1|seq))',
+					(2,4,5)]
+	
+	else:
+		raise ValueError('The file %s did not match existing file patterns.' % file_name)
+
+	return(re_pattern)  # I will need the change this so that the important stuff is returned ['regex', (important valuess in tuple)]
+
+
 def yes_or_no(question):
 	if sys.version_info < (3,0):
 		reply = raw_input( question +' (y/n): ').lower().strip()
