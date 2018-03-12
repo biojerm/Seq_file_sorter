@@ -61,6 +61,10 @@ def sort_files():
 		# this mainly gets past when prefix_len is None and you can't parse the name
 		# I think this will mostly happen if the script runs twice.
 		pass
+def seq_files_present():
+	"""Checks current directory for sequence files"""
+	return(any(file.endswith(('.ab1', '.seq')) for file in os.listdir('.')))
+
 
 def choose_regex(file_name):
 	"""Returns RegEx pattern matching file_name"""

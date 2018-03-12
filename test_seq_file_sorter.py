@@ -1,8 +1,21 @@
 import unittest
+import os
+import tempfile
 import seq_file_sorter as fs
 
 
 class TestSeqFileSorter(unittest.TestCase):
+
+	def test_seq_files_present(self):
+		#finds a temp ab1 file
+		with tempfile.TemporaryFile(suffix='.ab1',dir=os.path.dirname(os.path.abspath(__file__))) as tf:
+			self.assertTrue(fs.seq_files_present(), "Should return true if .abi file in directory")
+		# finds temp .seq
+		with tempfile.TemporaryFile(suffix='.seq',dir=os.path.dirname(os.path.abspath(__file__))) as tf:
+			self.assertTrue(fs.seq_files_present(),"Should return true if .seq file in directory")
+		# should fail if 
+		with tempfile.TemporaryFile(suffix='.anythingelse',dir=os.path.dirname(os.path.abspath(__file__))) as tf:
+			self.assertFalse(fs.seq_files_present(),"Should return false if not .seq or .ab1 file in directory")
 	def test_file_name_pattern(self):
 		# returns correct regex for a given file name
 		self.assertEqual(fs.choose_regex('JL_470815-501_US_NDT80_pUC-Seq-F_A12.ab1')[0],
@@ -23,15 +36,13 @@ class TestSeqFileSorter(unittest.TestCase):
 		with self.assertRaises(ValueError) as cm:
 			fs.choose_regex('anyfilename.abi')
 		self.assertEqual('The file anyfilename.abi did not match existing file patterns.', str(cm.exception)) # checks correct error
+	
 	def TestCreateAbiAndSeqFolders(self):
 
 		# checks creates folders if files are present
 		# goes not create folders if files not present
 		pass
 
-	def TestSeqFilesPresent(self):
-		# checks if seq files are present
-		pass
 
 	def TestUserInput(self):
 		# gets yes or no values
