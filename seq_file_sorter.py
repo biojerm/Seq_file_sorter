@@ -117,5 +117,23 @@ if __name__ == '__main__':
 
 	if move_file is True:
 		os.rename(current_location+'/'+file_name, os.path.expanduser("~/Desktop/")+file_name)	
-	
 
+def create_seq_folders():
+	# changes current working directory to location of file
+	os.chdir(os.path.dirname(os.path.abspath(__file__)))
+	
+	# creates the ab1 and seq directories if not present
+	if not os.path.exists('ab1'):
+		os.makedirs('ab1')
+	if not os.path.exists('seq'):
+		os.makedirs('seq')
+
+
+
+# How I want the flow
+
+# 1) chekck if seq files present and abort if non
+# 2) Check if AB1 and Seq folders are present and create if not
+# 3) start sorting the files checking for proper regex each time
+# 4) Ask if want file to be moved back to home directory
+# 5) Move file depeneding on desired outcome
