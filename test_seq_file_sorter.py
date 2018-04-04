@@ -58,14 +58,23 @@ class TestSeqFileSorter(unittest.TestCase):
 		fs.create_seq_folders()
 		self.assertEqual(len(mock_make_dirs.mock_calls),2)
 
-	def TestUserInput(self):
-		# gets yes or no values
-		# asks question again if wrong input
-		pass
-
-	def TestMovesFileToDesktop(self):
-		pass
+	@patch('seq_file_sorter.input', return_value ='yes')
+	def test_yes_or_no_rely_y(self, reply):
+		self.assertTrue(fs.yes_or_no('Any question?'))
 	
+	@patch('seq_file_sorter.input', return_value ='no')
+	def test_yes_or_no_rely_n(self, reply):
+		self.assertFalse(fs.yes_or_no('Any question?'))
 
+	@patch('seq_file_sorter.input', return_value ='no')
+	def test_yes_or_no_rely_n(self, reply):
+		self.assertFalse(fs.yes_or_no('Any question?'))
+
+	# yes_no is not fully tested because I cannot figure out how to the recursive bit
+	# it's probably the most important, but I don't know how to change the return value
+	# multiple SO pages suggested using the side_effects, but I did not get that to work
+	# also stuff about a counter, but nothing simple
+	
+	# self to desktop is no tested
 if __name__ == '__main__':
 	unittest.main()
