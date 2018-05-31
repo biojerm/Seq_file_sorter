@@ -2,11 +2,7 @@ import unittest
 import os
 import tempfile
 import seq_file_sorter as fs
-from unittest.mock import patch
-from unittest.mock import MagicMock
-from test import support
-
-import unittest
+from unittest.mock import patch, MagicMock
 from test import support
 
 class TestSeqFileSorter(unittest.TestCase):
@@ -16,6 +12,7 @@ class TestSeqFileSorter(unittest.TestCase):
 
 	def tearDown(self):
 		pass
+
 	def test_seq_files_present(self):
 		#finds a temp ab1 file
 		with tempfile.NamedTemporaryFile(suffix='.ab1',dir=self.file_path) as tf:
@@ -48,15 +45,15 @@ class TestSeqFileSorter(unittest.TestCase):
 			fs.choose_regex('anyfilename.ab1')
 		self.assertEqual('The file anyfilename.ab1 did not match existing file patterns.', str(cm.exception)) # checks correct error
 	
-	@patch('seq_file_sorter.os.makedirs')
-	@patch('seq_file_sorter.os.path.exists')	
+	@patch('os.makedirs')
+	@patch('os.path.exists')	
 	def test_folders_not_created_if_present(self, mock_exists, mock_make_dirs):
 		mock_exists.return_value = True
 		fs.create_seq_folders()
 		self.assertEqual(len(mock_make_dirs.mock_calls),0)
 
-	@patch('seq_file_sorter.os.makedirs')
-	@patch('seq_file_sorter.os.path.exists')	
+	@patch('os.makedirs')
+	@patch('os.path.exists')	
 	def test_folders_created_if_not_present(self, mock_exists, mock_make_dirs):
 		mock_exists.return_value = False
 		fs.create_seq_folders()
