@@ -62,15 +62,16 @@ class TestSeqFileSorter(unittest.TestCase):
 		fs.create_seq_folders()
 		self.assertEqual(len(mock_make_dirs.mock_calls),2)
 
-	@patch('seq_file_sorter.input', return_value ='yes')
+	
+	@patch('builtins.input', return_value ='yes')
 	def test_yes_or_no_reply_y(self, reply):
 		self.assertTrue(fs.yes_or_no('Any question?'))
 	
-	@patch('seq_file_sorter.input', return_value ='no')
+	@patch('builtins.input', return_value ='no')
 	def test_yes_or_no_reply_n(self, reply):
 		self.assertFalse(fs.yes_or_no('Any question?'))
 
-	@patch('seq_file_sorter.input', return_value ='no')
+	@patch('builtins.input', return_value ='no')
 	def test_yes_or_no_reply_n(self, reply):
 		self.assertFalse(fs.yes_or_no('Any question?'))
 
@@ -78,10 +79,7 @@ class TestSeqFileSorter(unittest.TestCase):
 	def test_yes_or_no_bad_reply(self, mock):
 		self.assertTrue(fs.yes_or_no('here is a silly question'))
 
-	
-	# self to desktop is no tested
+
+# self to desktop is not tested
 if __name__ == '__main__':
 	unittest.main()
-
-
-#Things I had to change make return not a function.

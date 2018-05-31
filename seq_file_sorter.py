@@ -139,11 +139,4 @@ if __name__ == '__main__':
 		create_seq_folders()
 		move_files()
 		self_to_desktop()
-
-# How I want the flow
-
-# 1) check if seq files present and abort if non
-# 2) Check if AB1 and Seq folders are present and create if not
-# 3) start sorting the files checking for proper regex each time
-# 4) Ask if want file to be moved back to home directory
-# 5) Move file depeneding on desired outcome
+		
