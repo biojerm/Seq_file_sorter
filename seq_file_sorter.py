@@ -72,7 +72,8 @@ def move_files():
 			print("%s was not sorted" % file_name)
 
 def seq_files_present():
-	return(any(file.endswith(('.ab1', '.seq')) for file in os.listdir('.')))
+	# print(any(file.endswith(('.ab1', '.seq')) for file in os.listdir('.')))
+	return any(file.endswith(('.ab1', '.seq')) for file in os.listdir('.'))
 
 
 def choose_regex(file_name):
@@ -82,17 +83,17 @@ def choose_regex(file_name):
 	# |-group1------|--group2---------|-g3|-g4
 	#									   |g5
 	# JL_470815-501_US_NDT80_pUC-Seq-F_A12.ab1
-	if re.search('([A-Z]+_[0-9]+-[0-9]+_)(.*)([-|_][A-Z]+[0-9]+)(.(ab1|seq))',file_name):
+	if re.search('([A-Z]+_[0-9]+-[0-9]+_)(.*)([-|_][A-Z]+[0-9]+)(.(ab1|seq))', file_name):
 		re_pattern =['([A-Z]+_[0-9]+-[0-9]+_)(.*)([-|_][A-Z]+[0-9]+)(.(ab1|seq))',(2,4,5)]
-		return(re_pattern)
+		return re_pattern
 
 	# (.*)(_\d{4}-\d{2}-\d{2}_[a-hA-H]\d*)(.(ab1|seq))
 	# |-g1---|--g2----------|g3-
 	#						 |g4
 	# H1_JL62_2017-01-20_E06.ab1
-	elif re.search('(.*)(_\d{4}-\d{2}-\d{2}_[a-hA-H]\d*)(.(ab1|seq))',file_name):
+	elif re.search('(.*)(_\d{4}-\d{2}-\d{2}_[a-hA-H]\d*)(.(ab1|seq))', file_name):
 		re_pattern = ['(.*)(_\d{4}-\d{2}-\d{2}_[a-hA-H]\d*)(.(ab1|seq))',(1,3,4)]
-		return(re_pattern)
+		return re_pattern
 
 	# ([A-Z]+_[0-9]+-[0-9]+_)(.*[_|-][a-zA-Z]+[0-9]+)([a-hA-H]\d*)(.(ab1|seq))
 	# |----g1------|-----g2--|g3|4|g5|  # g4 is the period g5 is ab1 or seq
@@ -100,21 +101,20 @@ def choose_regex(file_name):
 	elif re.search('([A-Z]+_[0-9]+-[0-9]+_)(.*[_|-][a-zA-Z]+[0-9]+)([a-hA-H]\d*)(.(ab1|seq))',file_name):
 		re_pattern =['([A-Z]+_[0-9]+-[0-9]+_)(.*[_|-][a-zA-Z]+[0-9]+)([a-hA-H]\d*)(.(ab1|seq))',
 					(2,4,5)]
-		return(re_pattern)
+		return re_pattern
 	else:
-		print('The file %s did not match existing file patterns, and was skipped.' % file_name)
-		pass
+		raise ValueError('The file %s did not match existing file patterns.' % file_name)
 	  # I will need the change this so that the important stuff is returned ['regex', (important valuess in tuple)]
 
 
 def yes_or_no(question):
 	reply = input( question +' (y/n): ').lower().strip()
 	if reply[0] == 'y':
-		return(True)
+		return True
 	if reply[0] == 'n':
-		return(False)
+		return False
 	else:
-		return(yes_or_no("please enter y/n only"))
+		return yes_or_no("please enter y/n only")
 
 def create_seq_folders():
 	# changes current working directory to location of file

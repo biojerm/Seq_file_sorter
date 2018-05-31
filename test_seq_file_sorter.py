@@ -3,7 +3,11 @@ import os
 import tempfile
 import seq_file_sorter as fs
 from unittest.mock import patch
+from unittest.mock import MagicMock
+from test import support
 
+import unittest
+from test import support
 
 class TestSeqFileSorter(unittest.TestCase):
 
@@ -14,13 +18,13 @@ class TestSeqFileSorter(unittest.TestCase):
 		pass
 	def test_seq_files_present(self):
 		#finds a temp ab1 file
-		with tempfile.TemporaryFile(suffix='.ab1',dir=self.file_path) as tf:
-			self.assertTrue(fs.seq_files_present(), "Should return true if .abi file in directory")
+		with tempfile.NamedTemporaryFile(suffix='.ab1',dir=self.file_path) as tf:
+			self.assertTrue(fs.seq_files_present(),"Should return true if .ab1 file in directory")
 		# finds temp .seq
-		with tempfile.TemporaryFile(suffix='.seq',dir=self.file_path) as tf:
+		with tempfile.NamedTemporaryFile(suffix='.seq',dir=self.file_path) as tf:
 			self.assertTrue(fs.seq_files_present(),"Should return true if .seq file in directory")
 		# should fail if 
-		with tempfile.TemporaryFile(suffix='.anythingelse',dir=self.file_path) as tf:
+		with tempfile.NamedTemporaryFile(suffix='.anythingelse',dir=self.file_path) as tf:
 			self.assertFalse(fs.seq_files_present(),"Should return false if not .seq or .ab1 file in directory")
 	
 	def test_file_name_pattern(self):
@@ -41,8 +45,8 @@ class TestSeqFileSorter(unittest.TestCase):
 			(2,4,5),'need to return correct important groups')
 		
 		with self.assertRaises(ValueError) as cm:
-			fs.choose_regex('anyfilename.abi')
-		self.assertEqual('The file anyfilename.abi did not match existing file patterns.', str(cm.exception)) # checks correct error
+			fs.choose_regex('anyfilename.ab1')
+		self.assertEqual('The file anyfilename.ab1 did not match existing file patterns.', str(cm.exception)) # checks correct error
 	
 	@patch('seq_file_sorter.os.makedirs')
 	@patch('seq_file_sorter.os.path.exists')	
@@ -59,22 +63,25 @@ class TestSeqFileSorter(unittest.TestCase):
 		self.assertEqual(len(mock_make_dirs.mock_calls),2)
 
 	@patch('seq_file_sorter.input', return_value ='yes')
-	def test_yes_or_no_rely_y(self, reply):
+	def test_yes_or_no_reply_y(self, reply):
 		self.assertTrue(fs.yes_or_no('Any question?'))
 	
 	@patch('seq_file_sorter.input', return_value ='no')
-	def test_yes_or_no_rely_n(self, reply):
+	def test_yes_or_no_reply_n(self, reply):
 		self.assertFalse(fs.yes_or_no('Any question?'))
 
 	@patch('seq_file_sorter.input', return_value ='no')
-	def test_yes_or_no_rely_n(self, reply):
+	def test_yes_or_no_reply_n(self, reply):
 		self.assertFalse(fs.yes_or_no('Any question?'))
 
-	# yes_no is not fully tested because I cannot figure out how to the recursive bit
-	# it's probably the most important, but I don't know how to change the return value
-	# multiple SO pages suggested using the side_effects, but I did not get that to work
-	# also stuff about a counter, but nothing simple
+	@patch('builtins.input', side_effect=['1','y'])
+	def test_yes_or_no_bad_reply(self, mock):
+		self.assertTrue(fs.yes_or_no('here is a silly question'))
+
 	
 	# self to desktop is no tested
 if __name__ == '__main__':
 	unittest.main()
+
+
+#Things I had to change make return not a function.
