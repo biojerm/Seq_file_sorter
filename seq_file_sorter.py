@@ -13,7 +13,7 @@ def move_files():
 		try:
 			regex_pattern = choose_regex(file_name)
 			parsed_name = re.search(regex_pattern[0],file_name).group(*regex_pattern[1])
-			os.rename(filename,parsed_name[2]+'/'+''.join(parsed_name[:2]))
+			os.rename(file_name,parsed_name[2]+'/'+''.join(parsed_name[:2]))
 		except:
 			print("%s was not sorted" % file_name)
 
